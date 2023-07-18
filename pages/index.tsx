@@ -1,8 +1,10 @@
 import Head from 'next/head';
 import styles from '../styles/Home.module.css';
 import dynamic from 'next/dynamic';
-import 'quill/dist/quill.snow.css';
-import React, { useState } from 'react';
+import 'quill/dist/quill.snow.css'; //import styles
+import React, { useState, useEffect } from 'react';
+import { FullScreen, useFullScreenHandle } from "react-full-screen";
+
 
 const QuillNoSSRWrapper = dynamic(
   () => import('react-quill'), 
@@ -12,8 +14,21 @@ const QuillNoSSRWrapper = dynamic(
 export default function Home() {
   const [focusMode, setFocusMode] =
     useState(false);
+  const handle = useFullScreenHandle();  // Full screen handle
+  const [navVisible, setNavVisible] = useState(true);
+  const [showNavButton, setShowNavButton] = useState(false);
+
+  const toolbarOptions = [
+                ['bold', 'italic', 'underline'], // toggled buttons
+                [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+                [{ 'font': [] }],
+                [{ 'align': [] }],
+                ['clean'], // remove formatting button
+                ['toggle']
+              ]
   
   return (
+    <FullScreen handle={handle}>
     <div className= {styles.gridContainer}>
       <Head>
         <title>My Website</title>
@@ -21,16 +36,18 @@ export default function Home() {
       </Head>
 
       {/* Navigation column */}
-       <div className= {focusMode ? styles.hide : `${styles.colNav} ${styles.gridColumn}`}>
+       <div className= {(!navVisible || focusMode) ? styles.hide : `${styles.colNav} ${styles.gridColumn}`}>
 
-      {/* Navigation 1 */}
-      {/* Primary button */}
-      <nav className={`${styles.nav} ${styles.nav1}`}>
+  {/* Navigation 1 */}
+  <nav className={`${styles.nav} ${styles.nav1}`}>
+    
+  {/* Primary button */}
   <div className={`${styles.navItem} ${styles.panel} ${styles.primary}`}>
     <p>No Country For Old Men</p>
+    <button onClick={() => setNavVisible(!navVisible)}>Toggle Nav</button>
   </div>
 
-    {/* Version control button */}
+  {/* Version control button */}
   <div className={`${styles.navItem} ${styles.panel} ${styles.main}`}>
     <p>Main</p>
     <div className={styles.iconContainer}>
@@ -47,42 +64,81 @@ export default function Home() {
   </div>
   </nav>
 
+  {/* Navigation 2 */}
+  <nav className = {`${styles.nav} ${styles.nav2}`}>
+    <div className = {styles.navTitle}>e
+      <p>Highlight</p>
+    </div>
+    <div className ={`${styles.navItem} ${styles.file} ${styles.chapter1}`}>
+      <span className = "material-symbols-outlined"> description</span>
+      <p>Chapter 1</p>
+    </div>
+    <div className ={`${styles.navItem} ${styles.file} ${styles.antonChigurh}`}>
+      <span className = "material-symbols-outlined"> description</span>
+      <p>Anton Chigurh</p>
+    </div>
+  </nav>
 
-      <nav className = {`${styles.nav} ${styles.nav2}`}>
-        <div className = {styles.navTitle}>
-          <p>Focus</p>
-        </div>
-        <div className ={`${styles.navItem} ${styles.file} ${styles.chapter1}`}>
-          <span className = "material-symbols-outlined"> description</span>
-          <p>Chapter 1</p>
-        </div>
-        <div className ={`${styles.navItem} ${styles.file} ${styles.antonChigurh}`}>
-          <span className = "material-symbols-outlined"> description</span>
-          <p>Anton Chigurh</p>
-        </div>
-      </nav>
+<div className={`${styles.navItem} ${styles.newFile}`}>
+      <p className="title">+ New File</p>
+    </div>
+         {/* Focus button */}
+<div 
+  className={`${styles.navItem} ${styles.focusPanel}`}
+  onClick={() => {
+    setFocusMode(true);
+    handle.enter();
+  }}>
+  <p>Focus</p>
+  <span className="material-symbols-outlined">Fullscreen</span>
+</div>
          
-        <button onClick={() => setFocusMode(!focusMode)}>
-  {focusMode ? 'Exit Focus' : 'Focus'}
-</button>
-      </div>
+      </div> {/* Navigation column end */}
 
-      {/* Editor column */}
+      {/* Editor pane */}
+      
       <div className= {`${styles.colEditor} ${styles.gridColumn} ${focusMode ? styles.focus : ''}`}>
-        {focusMode && <button onClick={() => setFocusMode(false)}>Exit Focus</button>}
-        <QuillNoSSRWrapper />
+        <QuillNoSSRWrapper 
+          modules={{ 
+              toolbar: toolbarOptions
+            }} 
+            theme="snow"
+          />
       </div>
         
-        {/* YouTube column */}
-      <div className= {focusMode ? styles.hide : `${styles.colYoutube} ${styles.gridColumn}`}>
+        {/* Web pane */}
+      <div className= {focusMode ? styles.hide : `${styles.colWeb} ${styles.gridColumn}`}>
         <iframe
-    src="https://www.youtube.com/embed/dQw4w9WgXcQ"
-          title="YouTube Embed"
+          src="https://wordlewebsite.com/"
+          title="Webpane"
           allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
-          className={styles.youtubeIframe}
+          className={styles.webPane}
           allowFullScreen
         ></iframe>
       </div>
-    </div>     
+
+    {focusMode && (
+  <button onClick={() => {
+    setFocusMode(false);
+    handle.exit();
+  }}>
+    <span className=
+      "material-symbols-outlined">Fit_screen</span>
+  </button>
+)}
+      {/* Toggle Nav button */}
+        {!navVisible && !focusMode && (
+          <button
+            className={styles.toggleNavButton}
+            onClick={() => {
+              setNavVisible(true);
+              setShowNavButton(false);
+            }}
+          >
+            Toggle Nav
+          </button>
+        )}
+      </div>
+    </FullScreen>
   );
 }
