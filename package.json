@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@types/draft-js": "^0.11.10",
+    "allotment": "^1.19.2",
     "draft-js": "^0.11.7",
     "draft.js": "^0.2.0",
     "immutable": "^4.3.0",
@@ -20,7 +21,8 @@
     "react-dom": "18.2.0",
     "react-full-screen": "^1.1.1",
     "react-quill": "^2.0.0",
-    "screenfull": "^6.0.2"
+    "screenfull": "^6.0.2",
+    "split-pane-react": "^0.1.3"
   },
   "devDependencies": {
     "@types/node": "18.0.1",

@@ -4,6 +4,8 @@ import dynamic from 'next/dynamic';
 import 'quill/dist/quill.snow.css'; //import styles
 import React, { useState, useEffect } from 'react';
 import { FullScreen, useFullScreenHandle } from "react-full-screen";
+import { Allotment } from "allotment";
+import "allotment/dist/style.css";
 
 
 const QuillNoSSRWrapper = dynamic(
@@ -95,27 +97,36 @@ export default function Home() {
          
       </div> {/* Navigation column end */}
 
-      {/* Editor pane */}
-      
-      <div className= {`${styles.colEditor} ${styles.gridColumn} ${focusMode ? styles.focus : ''}`}>
-        <QuillNoSSRWrapper 
-          modules={{ 
-              toolbar: toolbarOptions
-            }} 
-            theme="snow"
-          />
-      </div>
-        
-        {/* Web pane */}
-      <div className= {focusMode ? styles.hide : `${styles.colWeb} ${styles.gridColumn}`}>
-        <iframe
-          src="https://wordlewebsite.com/"
-          title="Webpane"
-          allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
-          className={styles.webPane}
-          allowFullScreen
-        ></iframe>
-      </div>
+    {/* Editor and Web panes */}
+<div className={`${styles.allotmentContainer}`}>
+  <Allotment>
+    {/* Editor pane */}
+    <Allotment.Pane minSize={200}>
+  <div className={`${styles.colEditor} ${styles.gridColumn} ${styles.focus} ${styles.fullHeight}`}>
+    <QuillNoSSRWrapper 
+      modules={{ 
+          toolbar: toolbarOptions
+        }} 
+      theme="snow"
+    />
+  </div>
+</Allotment.Pane>
+
+
+    {/* Web pane */}
+    <Allotment.Pane snap>
+  <div className={focusMode ? styles.hide : `${styles.colWeb} ${styles.gridColumn} ${styles.fullHeight}`}>
+    <iframe
+      src="https://wordlewebsite.com/"
+      title="Webpane"
+      allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+      className={`${styles.webPane} ${styles.fullHeight}`}
+      allowFullScreen
+    ></iframe>
+  </div>
+</Allotment.Pane>
+  </Allotment>
+</div>
 
     {focusMode && (
   <button onClick={() => {

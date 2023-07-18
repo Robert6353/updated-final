@@ -15,12 +15,29 @@
 }
 
 .colEditor {
-  flex: 2.5;
+  flex: 1;
 }
 
 .colWeb {
-  flex: 2.5;
+  flex: 1;
   border-right: none;
+}
+
+.fullHeight {
+  height: 100%;
+}
+
+.editorFullWidth {
+  width: 100% !important;
+}
+
+.webPaneHidden {
+  width: 0% !important;
+}
+
+/* Add this for the Allotment component */
+.allotmentContainer {
+  flex: 5;
 }
 
 .webPane {
